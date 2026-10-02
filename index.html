@@ -14,15 +14,22 @@
     --rule: #e2e2e2;
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
-  /* dark mode: catppuccin mocha */
+  /* dark mode: catppuccin mocha — follows the browser unless the toggle overrides it */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #1e1e2e;
       --fg: #cdd6f4;
       --muted: #a6adc8;
       --accent: #89b4fa;
       --rule: #313244;
     }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1e1e2e;
+    --fg: #cdd6f4;
+    --muted: #a6adc8;
+    --accent: #89b4fa;
+    --rule: #313244;
   }
 
   * { box-sizing: border-box; }
@@ -88,7 +95,7 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 0.25rem 1.5rem;
-    margin-bottom: 1.75rem;
+    margin-bottom: 2.25rem;
   }
   .entry:last-child { margin-bottom: 0; }
 
@@ -110,20 +117,12 @@
   }
   .meta a { display: block; }
 
-  .entry ul {
-    grid-column: 1 / -1;
-    margin: 0.5rem 0 0;
-    padding-left: 1.15rem;
-  }
-  .entry li { margin-bottom: 0.4rem; }
-  .entry li:last-child { margin-bottom: 0; }
-
   .entry p.line {
     grid-column: 1 / -1;
-    margin: 0.4rem 0 0;
+    margin: 0.5rem 0 0;
   }
 
-  .about, .skills { margin: 0; }
+  .about { margin: 0; }
 
   /* --- scrolling alignment banner --- */
   .msa {
@@ -167,19 +166,42 @@
   .aa-arom  { background: #2bbfc4; color: #101f20; }
 
   @media (prefers-color-scheme: dark) {
-    .aa-hydro { background: #89b4fa; color: #11111b; }
-    .aa-basic { background: #f38ba8; color: #11111b; }
-    .aa-polar { background: #a6e3a1; color: #11111b; }
-    .aa-acid  { background: #cba6f7; color: #11111b; }
-    .aa-gly   { background: #fab387; color: #11111b; }
-    .aa-pro   { background: #f9e2af; color: #11111b; }
-    .aa-arom  { background: #94e2d5; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-hydro { background: #89b4fa; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-basic { background: #f38ba8; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-polar { background: #a6e3a1; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-acid  { background: #cba6f7; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-gly   { background: #fab387; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-pro   { background: #f9e2af; color: #11111b; }
+    :root:not([data-theme="light"]) .aa-arom  { background: #94e2d5; color: #11111b; }
   }
+  :root[data-theme="dark"] .aa-hydro { background: #89b4fa; color: #11111b; }
+  :root[data-theme="dark"] .aa-basic { background: #f38ba8; color: #11111b; }
+  :root[data-theme="dark"] .aa-polar { background: #a6e3a1; color: #11111b; }
+  :root[data-theme="dark"] .aa-acid  { background: #cba6f7; color: #11111b; }
+  :root[data-theme="dark"] .aa-gly   { background: #fab387; color: #11111b; }
+  :root[data-theme="dark"] .aa-pro   { background: #f9e2af; color: #11111b; }
+  :root[data-theme="dark"] .aa-arom  { background: #94e2d5; color: #11111b; }
 
   @keyframes msa-scroll {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
   }
+
+  .theme-toggle {
+    display: block;
+    margin: 0 0 0.9rem auto;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   @media (prefers-reduced-motion: reduce) {
     .msa-track { animation: none; }
@@ -192,10 +214,18 @@
     .meta a { display: inline; }
   }
 </style>
+<script>
+  /* apply a saved override before first paint; no override = follow the browser */
+  try {
+    var saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') { document.documentElement.dataset.theme = saved; }
+  } catch (e) {}
+</script>
 </head>
 <body>
 
 <header>
+  <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme">☾</button>
   <div class="msa" aria-hidden="true"><div class="msa-track" id="msa"></div></div>
   <h1>Remi Tregan</h1>
   <p class="subtitle">
@@ -213,72 +243,40 @@
 <section>
   <h2>About</h2>
   <p class="about">
-    I'm in the second year of a computational biology MSc at ETH Zürich. Before it, and
-    through most of my bachelor's, I worked at FoodBrewer, a cellular agriculture startup,
-    building the lab automation and the models that chose which experiment to run next.
-    I still like that part best: the stretch between a wet lab and a fitted model, where
-    the bottleneck is usually plumbing and not maths. I also lift for Switzerland, with
-    Europeans in 2022 and 2023 and Worlds in 2024.
-  </p>
-</section>
+  I'm a second-year computational biology &amp; bioinformatics student. Up until recently I was working as an Automation Engineer at FoodBrewer, a cellular agriculture startup.
 
-<section>
-  <h2>Things I've built</h2>
-
-  <div class="entry">
-    <h3>malt: Bayesian active learning for growth media</h3>
-    <p class="meta"><a href="https://github.com/tremgan/malt" target="_blank" rel="noopener">tremgan/malt</a></p>
-    <ul>
-      <li>Proposes the next batch of media to run: a Bayesian Gamma GLM fit by MCMC in PyMC, with batches picked by q-Noisy Expected Improvement over the posterior draws.</li>
-      <li>Against response-surface DOE on simulated labs with a known optimum: median cumulative regret 43% lower over 81 runs where the Gamma GLM fits the truth, 20% lower where it doesn't.</li>
-    </ul>
-  </div>
-
-  <div class="entry">
-    <h3>swiss-sports-bet: cross-bookmaker odds and arbitrage</h3>
-    <p class="meta">
-      <a href="https://github.com/tremgan/swiss-sports-bet" target="_blank" rel="noopener">tremgan/swiss-sports-bet</a>
-      <a href="https://tremgan.github.io/swiss-sports-bet/" target="_blank" rel="noopener">live page</a>
-    </p>
-    <ul>
-      <li>Two scrapers, one over REST and one reading compressed WebSocket frames through Playwright, feed a FastAPI/SQLModel service on Postgres. It ranks fixtures by combined overround and splits the stake when that drops under 1.</li>
-      <li>Runs every three hours on free tiers (GitHub Actions, Supabase, Pages).</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <h2>Background</h2>
-
-  <div class="entry">
-    <h3>MSc Computational Biology and Bioinformatics, ETH Zürich</h3>
-    <p class="meta">Since Sept 2025</p>
-    <p class="line">5.65/6 provisional. Probabilistic AI, protein design, ML for genomics, image analysis and computer vision.</p>
-  </div>
-
-  <div class="entry">
-    <h3>BSc Biology, ETH Zürich</h3>
-    <p class="meta">2022 – 2025</p>
-    <p class="line">5.65/6.</p>
-  </div>
-
-  <div class="entry">
-    <h3>FoodBrewer AG: Automation Engineer, before that Scientific Intern</h3>
-    <p class="meta">Horgen, ZH<br>2023 – 2026</p>
-    <p class="line">Built lab automation on PyLabRobot and an OT-2, driven by CSV-defined experimental designs, which cut run time by 80%. Optimised media with DOE and Gaussian-process growth models over time-series imaging, and wrote the Postgres ingestion pipeline behind EFSA/FDA submissions.</p>
-  </div>
-</section>
-
-<section>
-  <h2>Skills</h2>
-  <p class="skills">
-    Python and R; PyTorch, PyMC, scikit-learn, statsmodels, pandas/polars, scikit-image;
-    Docker, FastAPI, SQLModel/Postgres, GitHub Actions, Playwright, SLURM, uv.
-    English, German and French, all fluent.
+    Outside of school and work, I also do powerlifting at an international level, most recently at the 2024 Junior World Championships in Malta. My best lifts are a 290 squat, 180 bench press and 310 deadlift.
   </p>
 </section>
 
 <script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function isDark() {
+    var t = root.dataset.theme;
+    return t ? t === 'dark' : mq.matches;
+  }
+
+  function sync() {
+    var dark = isDark();
+    btn.textContent = dark ? '☀' : '☾';
+    btn.setAttribute('aria-label', 'Switch to ' + (dark ? 'light' : 'dark') + ' theme');
+  }
+
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+
+  mq.addEventListener('change', sync);
+  sync();
+})();
+
 (function () {
   var SEQS = [
     ['Act d 10', 'AVSCGQVDTALTPCLTYLTKGGTPSTQCCSGVRSLKSMTGTKVFDRQAACNCLKQAAARYQGIKDAAAASLSQTCGVQLSVPISRSTDCSKIS'],
