@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remi Tregan</title>
+<meta name="description" content="Remi Tregan, MSc Computational Biology and Bioinformatics, ETH Zürich.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1b1b1b;
+    --muted: #6b6b6b;
+    --accent: #004f90;
+    --rule: #e2e2e2;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  /* dark mode: catppuccin mocha */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e2e;
+      --fg: #cdd6f4;
+      --muted: #a6adc8;
+      --accent: #89b4fa;
+      --rule: #313244;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    max-width: 44rem;
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header { margin-bottom: 3rem; }
+
+  h1 {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin: 0.6rem 0 0;
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .subtitle b {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .contact {
+    margin: 1rem 0 0;
+    font-family: var(--mono);
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  h2 {
+    margin: 2.75rem 0 1.25rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .entry:last-child { margin-bottom: 0; }
+
+  .entry h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .meta {
+    margin: 0;
+    grid-column: 2;
+    font-family: var(--mono);
+    grid-row: 1;
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .meta a { display: block; }
+
+  .entry ul {
+    grid-column: 1 / -1;
+    margin: 0.5rem 0 0;
+    padding-left: 1.15rem;
+  }
+  .entry li { margin-bottom: 0.4rem; }
+  .entry li:last-child { margin-bottom: 0; }
+
+  .entry p.line {
+    grid-column: 1 / -1;
+    margin: 0.4rem 0 0;
+  }
+
+  .about, .skills { margin: 0; }
+
+  /* --- scrolling alignment banner --- */
+  .msa {
+    overflow: hidden;
+    margin-bottom: 2.25rem;
+    padding: 0.4rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .msa-track {
+    display: flex;
+    width: max-content;
+    animation: msa-scroll 60s linear infinite;
+  }
+
+  .msa-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .msa-row {
+    white-space: nowrap;
+    font: 400 10px/1.3 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .msa-row b {
+    display: inline-block;
+    width: 1.1ch;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .aa-hydro { background: #1f6fd0; color: #fff; }
+  .aa-basic { background: #d93b3b; color: #fff; }
+  .aa-polar { background: #15964c; color: #fff; }
+  .aa-acid  { background: #b84bbf; color: #fff; }
+  .aa-gly   { background: #e8902b; color: #231a10; }
+  .aa-pro   { background: #e8d823; color: #231a10; }
+  .aa-arom  { background: #2bbfc4; color: #101f20; }
+
+  @media (prefers-color-scheme: dark) {
+    .aa-hydro { background: #89b4fa; color: #11111b; }
+    .aa-basic { background: #f38ba8; color: #11111b; }
+    .aa-polar { background: #a6e3a1; color: #11111b; }
+    .aa-acid  { background: #cba6f7; color: #11111b; }
+    .aa-gly   { background: #fab387; color: #11111b; }
+    .aa-pro   { background: #f9e2af; color: #11111b; }
+    .aa-arom  { background: #94e2d5; color: #11111b; }
+  }
+
+  @keyframes msa-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .msa-track { animation: none; }
+  }
+
+  @media (max-width: 34rem) {
+    body { padding-top: 2.5rem; }
+    .entry { grid-template-columns: 1fr; }
+    .meta { grid-column: 1; grid-row: auto; text-align: left; white-space: normal; }
+    .meta a { display: inline; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="msa" aria-hidden="true"><div class="msa-track" id="msa"></div></div>
+  <h1>Remi Tregan</h1>
+  <p class="subtitle">
+    <b>MSc Computational Biology and Bioinformatics</b><br>
+    ETH Zürich
+  </p>
+  <ul class="contact">
+    <li>Zürich</li>
+    <li><a href="mailto:rtregan@ethz.ch">rtregan@ethz.ch</a></li>
+    <li><a href="https://www.linkedin.com/in/remitregan" target="_blank" rel="noopener">LinkedIn</a></li>
+    <li><a href="https://github.com/tremgan" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</header>
+
+<section>
+  <h2>About</h2>
+  <p class="about">
+    I'm in the second year of a computational biology MSc at ETH Zürich. Before it, and
+    through most of my bachelor's, I worked at FoodBrewer, a cellular agriculture startup,
+    building the lab automation and the models that chose which experiment to run next.
+    I still like that part best: the stretch between a wet lab and a fitted model, where
+    the bottleneck is usually plumbing and not maths. I also lift for Switzerland, with
+    Europeans in 2022 and 2023 and Worlds in 2024.
+  </p>
+</section>
+
+<section>
+  <h2>Things I've built</h2>
+
+  <div class="entry">
+    <h3>malt: Bayesian active learning for growth media</h3>
+    <p class="meta"><a href="https://github.com/tremgan/malt" target="_blank" rel="noopener">tremgan/malt</a></p>
+    <ul>
+      <li>Proposes the next batch of media to run: a Bayesian Gamma GLM fit by MCMC in PyMC, with batches picked by q-Noisy Expected Improvement over the posterior draws.</li>
+      <li>Against response-surface DOE on simulated labs with a known optimum: median cumulative regret 43% lower over 81 runs where the Gamma GLM fits the truth, 20% lower where it doesn't.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <h3>swiss-sports-bet: cross-bookmaker odds and arbitrage</h3>
+    <p class="meta">
+      <a href="https://github.com/tremgan/swiss-sports-bet" target="_blank" rel="noopener">tremgan/swiss-sports-bet</a>
+      <a href="https://tremgan.github.io/swiss-sports-bet/" target="_blank" rel="noopener">live page</a>
+    </p>
+    <ul>
+      <li>Two scrapers, one over REST and one reading compressed WebSocket frames through Playwright, feed a FastAPI/SQLModel service on Postgres. It ranks fixtures by combined overround and splits the stake when that drops under 1.</li>
+      <li>Runs every three hours on free tiers (GitHub Actions, Supabase, Pages).</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Background</h2>
+
+  <div class="entry">
+    <h3>MSc Computational Biology and Bioinformatics, ETH Zürich</h3>
+    <p class="meta">Since Sept 2025</p>
+    <p class="line">5.65/6 provisional. Probabilistic AI, protein design, ML for genomics, image analysis and computer vision.</p>
+  </div>
+
+  <div class="entry">
+    <h3>BSc Biology, ETH Zürich</h3>
+    <p class="meta">2022 – 2025</p>
+    <p class="line">5.65/6.</p>
+  </div>
+
+  <div class="entry">
+    <h3>FoodBrewer AG: Automation Engineer, before that Scientific Intern</h3>
+    <p class="meta">Horgen, ZH<br>2023 – 2026</p>
+    <p class="line">Built lab automation on PyLabRobot and an OT-2, driven by CSV-defined experimental designs, which cut run time by 80%. Optimised media with DOE and Gaussian-process growth models over time-series imaging, and wrote the Postgres ingestion pipeline behind EFSA/FDA submissions.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Skills</h2>
+  <p class="skills">
+    Python and R; PyTorch, PyMC, scikit-learn, statsmodels, pandas/polars, scikit-image;
+    Docker, FastAPI, SQLModel/Postgres, GitHub Actions, Playwright, SLURM, uv.
+    English, German and French, all fluent.
+  </p>
+</section>
+
+<script>
+(function () {
+  var SEQS = [
+    ['Act d 10', 'AVSCGQVDTALTPCLTYLTKGGTPSTQCCSGVRSLKSMTGTKVFDRQAACNCLKQAAARYQGIKDAAAASLSQTCGVQLSVPISRSTDCSKIS'],
+    ['Ara h 9',  'LSCGQVNSALAPCIPFITGGGSPSAACCSGVRSLNSMAKTTPDRQQACRCLVGAARGIKGLNAGNAASIPSKCGVSIPYAISTSTNCNSIR'],
+    ['Art v 3',  'ALTCGDVTSNLAPCLSYLQGGPGPSGQCCGGVKSLLSSAQTTADRRTACNCLKSAAGSISGLNLGNAASIPSKCGVSIPYKISPSTDCSKVK'],
+    ['Cor a 8',  'LTCGQVTGALAPCLPYLQGRGPLGGCCGGVKALVNSARTTADRRAACNCLKNAAAGVSGLNAGNAASIPSKCGVSVPYTISTSTDCSRVR'],
+    ['Mor n 3',  'ITCGQVNSAVGPCLTYARGGAGPSAACCSGVRSLNNAARTTADRRAACNCLKNAARGIKGLNAGNAASIPSKCGVSVPYTISTSTNCNTVR'],
+    ['Pru p 3',  'ITCGQVSSSLAPCIPYVRGGGAVPPACCNGIRNVNNLARTTPDRQAACNCLKQLSASVPGVNPNNAAALPGKCGVSIPYKISASTNCATVK']
+  ];
+
+  var COLORS = {
+    A: 'hydro', I: 'hydro', L: 'hydro', M: 'hydro', F: 'hydro',
+    W: 'hydro', V: 'hydro', C: 'hydro',
+    K: 'basic', R: 'basic',
+    N: 'polar', Q: 'polar', S: 'polar', T: 'polar',
+    D: 'acid', E: 'acid',
+    G: 'gly', P: 'pro', H: 'arom', Y: 'arom'
+  };
+
+  var width = 0;
+  SEQS.forEach(function (s) { width = Math.max(width, s[1].length); });
+
+  function block() {
+    var el = document.createElement('div');
+    el.className = 'msa-block';
+    SEQS.forEach(function (entry) {
+      var row = document.createElement('div');
+      row.className = 'msa-row';
+      var seq = entry[1];
+      while (seq.length < width) { seq += entry[1]; }
+      seq = seq.slice(0, width);
+      for (var i = 0; i < seq.length; i++) {
+        var cell = document.createElement('b');
+        cell.textContent = seq[i];
+        cell.className = 'aa-' + COLORS[seq[i]];
+        row.appendChild(cell);
+      }
+      el.appendChild(row);
+    });
+    return el;
+  }
+
+  var track = document.getElementById('msa');
+  track.appendChild(block());
+  track.appendChild(block());
+})();
+</script>
+
+</body>
+</html>
