@@ -6,31 +6,18 @@
 <title>Remi Tregan</title>
 <meta name="description" content="Remi Tregan, MSc Computational Biology and Bioinformatics, ETH Zürich.">
 <style>
+  /* toggle overrides the browser; dark palette is catppuccin mocha */
   :root {
-    --bg: #ffffff;
-    --fg: #1b1b1b;
-    --muted: #6b6b6b;
-    --accent: #004f90;
-    --rule: #e2e2e2;
+    color-scheme: light dark;
+    --bg:     light-dark(#ffffff, #1e1e2e);
+    --fg:     light-dark(#1b1b1b, #cdd6f4);
+    --muted:  light-dark(#6b6b6b, #a6adc8);
+    --accent: light-dark(#004f90, #89b4fa);
+    --rule:   light-dark(#e2e2e2, #313244);
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
-  /* dark mode: catppuccin mocha — follows the browser unless the toggle overrides it */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #1e1e2e;
-      --fg: #cdd6f4;
-      --muted: #a6adc8;
-      --accent: #89b4fa;
-      --rule: #313244;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #1e1e2e;
-    --fg: #cdd6f4;
-    --muted: #a6adc8;
-    --accent: #89b4fa;
-    --rule: #313244;
-  }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"]  { color-scheme: dark; }
 
   * { box-sizing: border-box; }
 
@@ -157,30 +144,13 @@
     font-weight: 400;
   }
 
-  .aa-hydro { background: #1f6fd0; color: #fff; }
-  .aa-basic { background: #d93b3b; color: #fff; }
-  .aa-polar { background: #15964c; color: #fff; }
-  .aa-acid  { background: #b84bbf; color: #fff; }
-  .aa-gly   { background: #e8902b; color: #231a10; }
-  .aa-pro   { background: #e8d823; color: #231a10; }
-  .aa-arom  { background: #2bbfc4; color: #101f20; }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .aa-hydro { background: #89b4fa; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-basic { background: #f38ba8; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-polar { background: #a6e3a1; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-acid  { background: #cba6f7; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-gly   { background: #fab387; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-pro   { background: #f9e2af; color: #11111b; }
-    :root:not([data-theme="light"]) .aa-arom  { background: #94e2d5; color: #11111b; }
-  }
-  :root[data-theme="dark"] .aa-hydro { background: #89b4fa; color: #11111b; }
-  :root[data-theme="dark"] .aa-basic { background: #f38ba8; color: #11111b; }
-  :root[data-theme="dark"] .aa-polar { background: #a6e3a1; color: #11111b; }
-  :root[data-theme="dark"] .aa-acid  { background: #cba6f7; color: #11111b; }
-  :root[data-theme="dark"] .aa-gly   { background: #fab387; color: #11111b; }
-  :root[data-theme="dark"] .aa-pro   { background: #f9e2af; color: #11111b; }
-  :root[data-theme="dark"] .aa-arom  { background: #94e2d5; color: #11111b; }
+  .aa-hydro { background: light-dark(#1f6fd0, #89b4fa); color: light-dark(#fff, #11111b); }
+  .aa-basic { background: light-dark(#d93b3b, #f38ba8); color: light-dark(#fff, #11111b); }
+  .aa-polar { background: light-dark(#15964c, #a6e3a1); color: light-dark(#fff, #11111b); }
+  .aa-acid  { background: light-dark(#b84bbf, #cba6f7); color: light-dark(#fff, #11111b); }
+  .aa-gly   { background: light-dark(#e8902b, #fab387); color: light-dark(#231a10, #11111b); }
+  .aa-pro   { background: light-dark(#e8d823, #f9e2af); color: light-dark(#231a10, #11111b); }
+  .aa-arom  { background: light-dark(#2bbfc4, #94e2d5); color: light-dark(#101f20, #11111b); }
 
   @keyframes msa-scroll {
     from { transform: translateX(0); }
@@ -300,28 +270,18 @@
   SEQS.forEach(function (s) { width = Math.max(width, s[1].length); });
 
   function block() {
-    var el = document.createElement('div');
-    el.className = 'msa-block';
-    SEQS.forEach(function (entry) {
-      var row = document.createElement('div');
-      row.className = 'msa-row';
+    var rows = SEQS.map(function (entry) {
       var seq = entry[1];
       while (seq.length < width) { seq += entry[1]; }
-      seq = seq.slice(0, width);
-      for (var i = 0; i < seq.length; i++) {
-        var cell = document.createElement('b');
-        cell.textContent = seq[i];
-        cell.className = 'aa-' + COLORS[seq[i]];
-        row.appendChild(cell);
-      }
-      el.appendChild(row);
+      return '<div class="msa-row">' + seq.slice(0, width).replace(/./g, function (aa) {
+        return '<b class="aa-' + COLORS[aa] + '">' + aa + '</b>';
+      }) + '</div>';
     });
-    return el;
+    return '<div class="msa-block">' + rows.join('') + '</div>';
   }
 
-  var track = document.getElementById('msa');
-  track.appendChild(block());
-  track.appendChild(block());
+  /* two copies so the -50% scroll loops seamlessly */
+  document.getElementById('msa').innerHTML = block() + block();
 })();
 </script>
 
